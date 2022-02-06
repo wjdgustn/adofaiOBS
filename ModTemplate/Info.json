@@ -1,0 +1,9 @@
+{
+  "Id": "ModTemplate",
+  "DisplayName": "ModTemplate",
+  "Author": "HYONSU",
+  "Version": "0.0.1",
+  "AssemblyName": "ModTemplate.dll",
+  "EntryMethod": "ModTemplate.Main.Load",
+  "Repository": ""
+}
