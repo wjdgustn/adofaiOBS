@@ -17,10 +17,14 @@ namespace adofaiOBS.MainPatch {
             if (state == scrController.States.Checkpoint || state == scrController.States.Countdown
                 || (state == scrController.States.Start && SceneManager.GetActiveScene().name == "scnEditor" && RDC.auto)) {
                 if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
+                if (Main.isRecording) {
+                    Main.StopRecording();
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                }
                 Main.StartRecording();
             }
 
-            if (state == scrController.States.Fail2) {
+            if (state == (Main.Settings.FailCountdownImmediately ? scrController.States.Fail : scrController.States.Fail2)) {
                 if (GCS.checkpointNum > 0 && Main.Settings.KeepRecordingOnCheckpointFailure) return;
                 
                 await Task.Delay(TimeSpan.FromSeconds(Main.Settings.FailWaitTime));

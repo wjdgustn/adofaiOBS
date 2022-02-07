@@ -11,6 +11,7 @@ namespace adofaiOBS {
         [Draw("체크포인트에서 실패시 녹화 유지(Keep recording on checkpoint failure)")] public bool KeepRecordingOnCheckpointFailure = false;
         [Draw("중간에 시작 시 녹화하지 않기(Don't record if start from middle)")] public bool DontRecordStartFromMiddle = false;
         [Draw("튜토리얼 클리어 시 녹화 유지(Keep recording on tutorial clear)")] public bool KeepRecordingOnTutorialClear = true;
+        [Draw("실패 후 효과 전 즉시 카운트다운(Countdown immediately after fail)")] public bool FailCountdownImmediately = false;
 
         public override void Save(UnityModManager.ModEntry modEntry) {
             UnityModManager.ModSettings.Save(this, modEntry);
