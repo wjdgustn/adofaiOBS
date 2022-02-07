@@ -3,5 +3,6 @@
 /**/node_modules
 /**/obj
 /**/Release
+/packages/
 *.zip
 *.user

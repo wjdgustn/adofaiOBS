@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModTemplate", "ModTemplate\ModTemplate.csproj", "{E9351314-818F-4A65-870E-0CADE3A45CBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "adofaiOBS", "adofaiOBS\adofaiOBS.csproj", "{E9351314-818F-4A65-870E-0CADE3A45CBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,9 @@
+{
+  "Id": "adofaiOBS",
+  "DisplayName": "adofaiOBS",
+  "Author": "HYONSU",
+  "Version": "0.0.1",
+  "AssemblyName": "adofaiOBS.dll",
+  "EntryMethod": "adofaiOBS.Main.Load",
+  "Repository": ""
+}
