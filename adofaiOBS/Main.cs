@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using HarmonyLib;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
@@ -39,7 +38,7 @@ namespace adofaiOBS {
             obs.StartRecording();
         }
 
-        internal static async void StopRecording(bool deleteFile = false) {
+        internal static void StopRecording(bool deleteFile = false) {
             if (!obs.IsConnected) return;
             if (!isRecording) return;
 
