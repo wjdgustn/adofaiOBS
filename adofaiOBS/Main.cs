@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using HarmonyLib;
 using OBSWebsocketDotNet;
+using OBSWebsocketDotNet.Types;
 using UnityModManagerNet;
 
 namespace adofaiOBS {
@@ -19,6 +22,8 @@ namespace adofaiOBS {
 
         internal static bool OBSConnected;
 
+        private static string recordingFile;
+
         internal static bool isRecording {
             get {
                 if(!obs.IsConnected) return false;
@@ -34,9 +39,12 @@ namespace adofaiOBS {
             obs.StartRecording();
         }
 
-        internal static void StopRecording() {
+        internal static async void StopRecording(bool deleteFile = false) {
             if (!obs.IsConnected) return;
             if (!isRecording) return;
+
+            if (Settings.DeleteRecordingOnFail && deleteFile) recordingFile = obs.GetRecordingStatus().RecordingFilename;
+            
             obs.StopRecording();
         }
 
@@ -78,6 +86,7 @@ namespace adofaiOBS {
 
             obs.Connected += onOBSConnect;
             obs.Disconnected += onOBSDisconnect;
+            obs.RecordingStateChanged += onOBSRecordingStateChanged;
 
             ConnectOBS();
         }
@@ -99,6 +108,15 @@ namespace adofaiOBS {
         
         private static void onOBSDisconnect(object sender, EventArgs e) {
             OBSConnected = false;
+        }
+        
+        private static void onOBSRecordingStateChanged(OBSWebsocket sender, OutputState state) {
+            if (state == OutputState.Stopped) {
+                if(Settings.DeleteRecordingOnFail && recordingFile != null) {
+                    File.Delete(recordingFile);
+                    recordingFile = null;
+                }
+            }
         }
     }
 }

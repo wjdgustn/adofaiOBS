@@ -28,7 +28,7 @@ namespace adofaiOBS.MainPatch {
                 if (GCS.checkpointNum > 0 && Main.Settings.KeepRecordingOnCheckpointFailure) return;
                 
                 await Task.Delay(TimeSpan.FromSeconds(Main.Settings.FailWaitTime));
-                Main.StopRecording();
+                Main.StopRecording(true);
             }
         }
     }
