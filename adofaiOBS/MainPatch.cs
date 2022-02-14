@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using ADOFAI;
 using HarmonyLib;
 using MonsterLove.StateMachine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace adofaiOBS.MainPatch {
@@ -28,7 +32,9 @@ namespace adofaiOBS.MainPatch {
                 if (GCS.checkpointNum > 0 && Main.Settings.KeepRecordingOnCheckpointFailure) return;
                 
                 await Task.Delay(TimeSpan.FromSeconds(Main.Settings.FailWaitTime));
-                Main.StopRecording(true);
+                var currentState = scrController.instance.currentState;
+                if (currentState != scrController.States.PlayerControl 
+                    && currentState != scrController.States.Countdown) Main.StopRecording(true);
             }
         }
     }
@@ -45,7 +51,9 @@ namespace adofaiOBS.MainPatch {
                 Main.Mod.Logger.Log("clear detected");
 
                 await Task.Delay(TimeSpan.FromSeconds(Main.Settings.ClearWaitTime));
-                Main.StopRecording();
+                var currentState = scrController.instance.currentState;
+                if (currentState != scrController.States.PlayerControl 
+                    && currentState != scrController.States.Countdown) Main.StopRecording();
             }
         }
     }
@@ -66,9 +74,9 @@ namespace adofaiOBS.MainPatch {
             if (!Main.obs.IsConnected) return;
             if (!Main.isRecording) return;
 
-            if(SceneManager.GetActiveScene().name == "scnEditor" && !GCS.standaloneLevelMode) return;
+            if (SceneManager.GetActiveScene().name == "scnEditor" && !GCS.standaloneLevelMode) return;
 
-            if(__instance.paused) Main.obs.PauseRecording();
+            if (__instance.paused) Main.obs.PauseRecording();
             else Main.obs.ResumeRecording();
         }
     }
