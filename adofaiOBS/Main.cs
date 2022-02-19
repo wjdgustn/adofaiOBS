@@ -17,7 +17,7 @@ namespace adofaiOBS {
         internal static bool IsEnabled { get; private set; }
         internal static MainSettings Settings { get; private set; }
 
-        internal static OBSWebsocket obs;
+        internal static object obs;
 
         internal static bool OBSConnected;
 
@@ -25,29 +25,34 @@ namespace adofaiOBS {
 
         internal static bool isRecording {
             get {
-                if(!obs.IsConnected) return false;
+                if(!((OBSWebsocket) obs).IsConnected) return false;
                 
-                var streamStatus = obs.GetStreamingStatus();
+                var streamStatus = ((OBSWebsocket) obs).GetStreamingStatus();
                 return streamStatus.IsRecording;
             }
         }
 
         internal static void StartRecording() {
-            if (!obs.IsConnected) return;
+            if (!((OBSWebsocket) obs).IsConnected) return;
             if (isRecording) return;
-            obs.StartRecording();
+            ((OBSWebsocket) obs).StartRecording();
         }
 
         internal static void StopRecording(bool deleteFile = false) {
-            if (!obs.IsConnected) return;
+            if (!((OBSWebsocket) obs).IsConnected) return;
             if (!isRecording) return;
 
-            if (Settings.DeleteRecordingOnFail && deleteFile) recordingFile = obs.GetRecordingStatus().RecordingFilename;
+            if (Settings.DeleteRecordingOnFail && deleteFile) recordingFile = ((OBSWebsocket) obs).GetRecordingStatus().RecordingFilename;
             
-            obs.StopRecording();
+            ((OBSWebsocket) obs).StopRecording();
         }
 
         private static void Load(UnityModManager.ModEntry modEntry) {
+            LoadAssembly("Mods/adofaiOBS/netstandard.dll");
+            LoadAssembly("Mods/adofaiOBS/Newtonsoft.Json.dll");
+            LoadAssembly("Mods/adofaiOBS/websocket-sharp.dll");
+            LoadAssembly("Mods/adofaiOBS/obs-websocket-dotnet.dll");
+
             Mod = modEntry;
             Mod.OnToggle = OnToggle;
             Settings = UnityModManager.ModSettings.Load<MainSettings>(modEntry);
@@ -57,6 +62,14 @@ namespace adofaiOBS {
             #if DEBUG
             Mod.OnUnload = Stop;
             #endif
+        }
+        
+        private static void LoadAssembly(string path) {
+            using (FileStream stream = new FileStream(path, FileMode.Open)) {
+                byte[] data = new byte[stream.Length];
+                stream.Read(data, 0, data.Length);
+                AppDomain.CurrentDomain.Load(data);
+            }
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value) {
@@ -70,7 +83,7 @@ namespace adofaiOBS {
 
         internal static void ConnectOBS() {
             try {
-                obs.Connect(Settings.OBSServer, Settings.Password);
+                ((OBSWebsocket) obs).Connect(Settings.OBSServer, Settings.Password);
             }
             catch {
                 // ignored
@@ -83,9 +96,9 @@ namespace adofaiOBS {
 
             obs = new OBSWebsocket();
 
-            obs.Connected += onOBSConnect;
-            obs.Disconnected += onOBSDisconnect;
-            obs.RecordingStateChanged += onOBSRecordingStateChanged;
+            ((OBSWebsocket) obs).Connected += onOBSConnect;
+            ((OBSWebsocket) obs).Disconnected += onOBSDisconnect;
+            ((OBSWebsocket) obs).RecordingStateChanged += onOBSRecordingStateChanged;
 
             ConnectOBS();
         }
@@ -96,7 +109,7 @@ namespace adofaiOBS {
             _harmony = null;
             #endif
 
-            if(obs.IsConnected) obs.Disconnect();
+            if(((OBSWebsocket) obs).IsConnected) ((OBSWebsocket) obs).Disconnect();
 
             return true;
         }

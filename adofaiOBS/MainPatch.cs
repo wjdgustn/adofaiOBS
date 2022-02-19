@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ADOFAI;
 using HarmonyLib;
 using MonsterLove.StateMachine;
-using UnityEngine;
+using OBSWebsocketDotNet;
 using UnityEngine.SceneManagement;
 
 namespace adofaiOBS.MainPatch {
@@ -71,13 +71,13 @@ namespace adofaiOBS.MainPatch {
     internal static class DetectPause {
         private static void Postfix(scrController __instance) {
             if (!Main.Settings.PauseRecordingOnPause) return;
-            if (!Main.obs.IsConnected) return;
+            if (!((OBSWebsocket) Main.obs).IsConnected) return;
             if (!Main.isRecording) return;
 
             if (SceneManager.GetActiveScene().name == "scnEditor" && !GCS.standaloneLevelMode) return;
 
-            if (__instance.paused) Main.obs.PauseRecording();
-            else Main.obs.ResumeRecording();
+            if (__instance.paused) ((OBSWebsocket) Main.obs).PauseRecording();
+            else ((OBSWebsocket) Main.obs).ResumeRecording();
         }
     }
 
