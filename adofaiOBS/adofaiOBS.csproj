@@ -458,7 +458,6 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="MainPatch.cs" />
-    <Compile Include="OBS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
