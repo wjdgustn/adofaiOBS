@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using HarmonyLib;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
@@ -22,6 +23,8 @@ namespace adofaiOBS {
         internal static bool OBSConnected;
 
         private static string recordingFile;
+
+        internal static scrController.States state;
 
         internal static bool isRecording {
             get {
@@ -83,7 +86,7 @@ namespace adofaiOBS {
 
         internal static void ConnectOBS() {
             try {
-                ((OBSWebsocket) obs).Connect(Settings.OBSServer, Settings.Password);
+                Task.Run(() => ((OBSWebsocket) obs).Connect(Settings.OBSServer, Settings.Password));
             }
             catch {
                 // ignored

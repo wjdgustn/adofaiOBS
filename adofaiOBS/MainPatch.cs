@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using ADOFAI;
 using HarmonyLib;
 using MonsterLove.StateMachine;
 using OBSWebsocketDotNet;
@@ -17,13 +14,14 @@ namespace adofaiOBS.MainPatch {
             Main.Mod.Logger.Log(newState.ToString());
 
             var state = (scrController.States) newState;
+            Main.state = state;
 
-            if (state == scrController.States.Checkpoint || state == scrController.States.Countdown
+            if (((state == scrController.States.Checkpoint || state == scrController.States.Countdown) && !RDC.auto)
                 || (state == scrController.States.Start && SceneManager.GetActiveScene().name == "scnEditor" && RDC.auto)) {
                 if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
                 if (Main.isRecording) {
                     Main.StopRecording();
-                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    // await Task.Delay(TimeSpan.FromSeconds(1));
                 }
                 Main.StartRecording();
             }
@@ -32,9 +30,8 @@ namespace adofaiOBS.MainPatch {
                 if (GCS.checkpointNum > 0 && Main.Settings.KeepRecordingOnCheckpointFailure) return;
                 
                 await Task.Delay(TimeSpan.FromSeconds(Main.Settings.FailWaitTime));
-                var currentState = scrController.instance.currentState;
-                if (currentState != scrController.States.PlayerControl 
-                    && currentState != scrController.States.Countdown) Main.StopRecording(true);
+                if (Main.state != scrController.States.PlayerControl 
+                    && Main.state != scrController.States.Countdown) Main.StopRecording(true);
             }
         }
     }
@@ -88,4 +85,46 @@ namespace adofaiOBS.MainPatch {
             Main.StopRecording();
         }
     }
+
+    [HarmonyPatch(typeof(scnEditor), "Update")]
+
+    internal static class CheckRecording {
+        private static void Postfix() {
+            if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
+            if (Main.state != scrController.States.PlayerControl || scnEditor.instance.inStrictlyEditingMode) return;
+            if (Main.isRecording) return;
+
+            Main.Mod.Logger.Log("Recording force started!!!");
+            Main.StartRecording();
+        }
+    }
+
+    // [HarmonyPatch(typeof(scnEditor), "Awake")]
+    //
+    // internal static class AddEvent {
+    //     private static bool EventAdded;
+    //     
+    //     private static void Prefix() {
+    //         if (EventAdded) return;
+    //
+    //         var dontDeleteVideoEvent = new LevelEventInfo();
+    //         dontDeleteVideoEvent.name = "DontDeleteVideo";
+    //         dontDeleteVideoEvent.type = (LevelEventType) 100;
+    //         dontDeleteVideoEvent.categories = new List<LevelEventCategory>();
+    //         dontDeleteVideoEvent.executionTime = LevelEventExecutionTime.Special;
+    //         
+    //         dontDeleteVideoEvent.categories.Add(LevelEventCategory.Gameplay);
+    //
+    //         GCS.levelEventsInfo.Add(dontDeleteVideoEvent.name, dontDeleteVideoEvent);
+    //
+    //         var dontDeleteVideoTexture = new Texture2D(2, 2);
+    //         var reader = new BinaryReader(new FileStream(Path.Combine(Main.Mod.Path, "DontDeleteVideo.png"), FileMode.Open));
+    //         dontDeleteVideoTexture.LoadImage(reader.ReadBytes((int) reader.BaseStream.Length));
+    //         var dontDeleteVideoIcon = Sprite.Create(dontDeleteVideoTexture, new Rect(0, 0, dontDeleteVideoTexture.width, dontDeleteVideoTexture.height), new Vector2(0.5f, 0.5f));
+    //         
+    //         GCS.levelEventIcons.Add((LevelEventType) 100, dontDeleteVideoIcon);
+    //         
+    //         EventAdded = true;
+    //     }
+    // }
 }
