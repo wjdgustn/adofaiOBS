@@ -13,6 +13,7 @@ namespace adofaiOBS {
         [Draw("튜토리얼 클리어 시 녹화 유지(Keep recording on tutorial clear)")] public bool KeepRecordingOnTutorialClear = true;
         [Draw("실패 후 효과 전 즉시 카운트다운(Countdown immediately after fail)")] public bool FailCountdownImmediately = false;
         [Draw("실패 시 녹화 파일 삭제(Delete recording file on fail)")] public bool DeleteRecordingOnFail = false;
+        [Draw("게임 중 녹화가 되지 않고 있는지 확인(Check if recording is in game)")] public bool CheckRecordingInGame = true;
 
         public override void Save(UnityModManager.ModEntry modEntry) {
             UnityModManager.ModSettings.Save(this, modEntry);

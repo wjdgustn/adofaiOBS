@@ -2,7 +2,7 @@
   "Id": "adofaiOBS",
   "DisplayName": "adofaiOBS",
   "Author": "HYONSU",
-  "Version": "0.0.6",
+  "Version": "0.0.7",
   "AssemblyName": "adofaiOBS.dll",
   "EntryMethod": "adofaiOBS.Main.Load",
   "Repository": ""

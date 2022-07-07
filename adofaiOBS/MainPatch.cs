@@ -90,6 +90,8 @@ namespace adofaiOBS.MainPatch {
 
     internal static class CheckRecording {
         private static void Postfix() {
+            if (!Main.Settings.CheckRecordingInGame) return;
+
             if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
             if (Main.state != scrController.States.PlayerControl || scnEditor.instance.inStrictlyEditingMode) return;
             if (Main.isRecording) return;

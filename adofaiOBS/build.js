@@ -26,6 +26,11 @@ setImmediate(async () => {
         fs.writeFileSync('./Release/Info.json', JSON.stringify(Info, null, 4))
     }
 
+    fs.copyFileSync('../packages/Newtonsoft.Json.13.0.1/lib/net20/Newtonsoft.Json.dll', './Release/Newtonsoft.Json.dll')
+    fs.copyFileSync('../packages/obs-websocket-dotnet.4.9.1/lib/netstandard2.0/obs-websocket-dotnet.dll', './Release/obs-websocket-dotnet.dll')
+    fs.copyFileSync('../packages/WebSocketSharp-netstandard.1.0.1/lib/net45/websocket-sharp.dll', './Release/websocket-sharp.dll')
+    fs.copyFileSync('../packages/netstandard.dll', './Release/netstandard.dll')
+
     if (args.release) {
         const zip = archiver('zip', {})
         const stream = fs.createWriteStream(path.join(__dirname, `${info.Id}-${info.Version}.zip`))
@@ -45,6 +50,13 @@ setImmediate(async () => {
             if(!args.norestart) fs.mkdirSync(modPath)
             fs.copyFileSync(`Release/${info.Id}.dll`, path.join(modPath, info.Id + '.dll'))
             fs.copyFileSync('Release/Info.json', path.join(modPath, 'Info.json'))
+
+            if(!args.norestart) {
+                fs.copyFileSync('../packages/Newtonsoft.Json.13.0.1/lib/net20/Newtonsoft.Json.dll', path.join(modPath, 'Newtonsoft.Json.dll'))
+                fs.copyFileSync('../packages/obs-websocket-dotnet.4.9.1/lib/netstandard2.0/obs-websocket-dotnet.dll', path.join(modPath, 'obs-websocket-dotnet.dll'))
+                fs.copyFileSync('../packages/WebSocketSharp-netstandard.1.0.1/lib/net45/websocket-sharp.dll', path.join(modPath, 'websocket-sharp.dll'))
+                fs.copyFileSync('../packages/netstandard.dll', path.join(modPath, 'netstandard.dll'))
+            }
 
             if(!args.norestart) try {
                 await cp.exec('explorer steam://rungameid/977950')
