@@ -95,6 +95,7 @@ namespace adofaiOBS.MainPatch {
             if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
             if (Main.state != scrController.States.PlayerControl || scnEditor.instance.inStrictlyEditingMode) return;
             if (Main.isRecording) return;
+            if (scrController.instance.currentSeqID == ADOBase.lm.listFloors.Count - 1) return;
 
             Main.Mod.Logger.Log("Recording force started!!!");
             Main.StartRecording();
