@@ -13,11 +13,11 @@ namespace adofaiOBS.MainPatch {
         private static async void Prefix(Enum newState) {
             Main.Mod.Logger.Log(newState.ToString());
 
-            var state = (scrController.States) newState;
+            var state = (States) newState;
             Main.state = state;
 
-            if (((state == scrController.States.Checkpoint || state == scrController.States.Countdown) && !RDC.auto)
-                || (state == scrController.States.Start && SceneManager.GetActiveScene().name == "scnEditor" && RDC.auto)) {
+            if (((state == States.Checkpoint || state == States.Countdown) && !RDC.auto)
+                || (state == States.Start && SceneManager.GetActiveScene().name == "scnEditor" && RDC.auto)) {
                 if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
                 if (Main.isRecording) {
                     Main.StopRecording();
@@ -26,12 +26,12 @@ namespace adofaiOBS.MainPatch {
                 Main.StartRecording();
             }
 
-            if (state == (Main.Settings.FailCountdownImmediately ? scrController.States.Fail : scrController.States.Fail2)) {
+            if (state == (Main.Settings.FailCountdownImmediately ? States.Fail : States.Fail2)) {
                 if (GCS.checkpointNum > 0 && Main.Settings.KeepRecordingOnCheckpointFailure) return;
                 
                 await Task.Delay(TimeSpan.FromSeconds(Main.Settings.FailWaitTime));
-                if (Main.state != scrController.States.PlayerControl 
-                    && Main.state != scrController.States.Countdown) Main.StopRecording(true);
+                if (Main.state != States.PlayerControl 
+                    && Main.state != States.Countdown) Main.StopRecording(true);
             }
         }
     }
@@ -49,8 +49,8 @@ namespace adofaiOBS.MainPatch {
 
                 await Task.Delay(TimeSpan.FromSeconds(Main.Settings.ClearWaitTime));
                 var currentState = scrController.instance.currentState;
-                if (currentState != scrController.States.PlayerControl 
-                    && currentState != scrController.States.Countdown) Main.StopRecording();
+                if (currentState != States.PlayerControl 
+                    && currentState != States.Countdown) Main.StopRecording();
             }
         }
     }
@@ -93,7 +93,7 @@ namespace adofaiOBS.MainPatch {
             if (!Main.Settings.CheckRecordingInGame) return;
 
             if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
-            if (Main.state != scrController.States.PlayerControl || scnEditor.instance.inStrictlyEditingMode) return;
+            if (Main.state != States.PlayerControl || scnEditor.instance.inStrictlyEditingMode) return;
             if (Main.isRecording) return;
             if (scrController.instance.currentSeqID == ADOBase.lm.listFloors.Count - 1) return;
 

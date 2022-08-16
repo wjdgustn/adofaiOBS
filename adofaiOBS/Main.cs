@@ -24,7 +24,7 @@ namespace adofaiOBS {
 
         private static string recordingFile;
 
-        internal static scrController.States state;
+        internal static States state;
 
         internal static bool isRecording {
             get {
