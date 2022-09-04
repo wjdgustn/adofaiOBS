@@ -19,6 +19,7 @@ namespace adofaiOBS.MainPatch {
             if (((state == States.Checkpoint || state == States.Countdown) && !RDC.auto)
                 || (state == States.Start && SceneManager.GetActiveScene().name == "scnEditor" && RDC.auto)) {
                 if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
+                if (Main.Settings.DontRecordAutoPlay && RDC.auto) return;
                 if (Main.isRecording) {
                     Main.StopRecording();
                     // await Task.Delay(TimeSpan.FromSeconds(1));
@@ -93,6 +94,7 @@ namespace adofaiOBS.MainPatch {
             if (!Main.Settings.CheckRecordingInGame) return;
 
             if (Main.Settings.DontRecordStartFromMiddle && GCS.checkpointNum > 0) return;
+            if (Main.Settings.DontRecordAutoPlay && RDC.auto) return;
             if (Main.state != States.PlayerControl || scnEditor.instance.inStrictlyEditingMode) return;
             if (Main.isRecording) return;
             if (scrController.instance.currentSeqID == ADOBase.lm.listFloors.Count - 1) return;

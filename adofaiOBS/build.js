@@ -12,7 +12,7 @@ setImmediate(async () => {
 
     rimraf.sync('Release')
 
-    cp.execSync(`chcp 65001 && dotnet "C:\\Users\\Computer\\.dotnet\\sdk\\5.0.402\\MSBuild.dll" /p:Configuration=${args.release ? 'Release' : 'Debug'}`)
+    cp.execSync(`chcp 65001 && dotnet "C:\\Users\\HYONSU\\.dotnet\\sdk\\6.0.400\\MSBuild.dll" /p:Configuration=${args.release ? 'Release' : 'Debug'}`)
 
     fs.mkdirSync('Release')
 
@@ -44,7 +44,7 @@ setImmediate(async () => {
 
         setTimeout(async () => {
             // const appPath = await findSteamAppById(977950)
-            const appPath = `D:\\steam\\steamapps\\common\\A Dance of Fire and Ice`;
+            const appPath = `D:\\SteamLibrary\\steamapps\\common\\A Dance of Fire and Ice`;
             const modPath = path.join(appPath, 'Mods', info.Id)
             if(!args.norestart) rimraf.sync(modPath)
             if(!args.norestart) fs.mkdirSync(modPath)
