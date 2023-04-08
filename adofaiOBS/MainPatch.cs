@@ -43,7 +43,7 @@ namespace adofaiOBS.MainPatch {
         private static async void Prefix() {
             if (scrController.isGameWorld) {
                 Main.Mod.Logger.Log("checking clear");
-                if (GCS.standaloneLevelMode && GCS.customLevelIndex < GCS.customLevelPaths.Length - 1 
+                if (ADOBase.isScnGame && GCS.customLevelIndex < GCS.customLevelPaths.Length - 1 
                     && Main.Settings.KeepRecordingOnTutorialClear) return;
                 
                 Main.Mod.Logger.Log("clear detected");
@@ -72,7 +72,7 @@ namespace adofaiOBS.MainPatch {
             if (!((OBSWebsocket) Main.obs).IsConnected) return;
             if (!Main.isRecording) return;
 
-            if (SceneManager.GetActiveScene().name == "scnEditor" && !GCS.standaloneLevelMode) return;
+            if (SceneManager.GetActiveScene().name == "scnEditor" && !ADOBase.isScnGame) return;
 
             if (__instance.paused) ((OBSWebsocket) Main.obs).PauseRecording();
             else ((OBSWebsocket) Main.obs).ResumeRecording();
