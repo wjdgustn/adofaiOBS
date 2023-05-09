@@ -41,7 +41,7 @@ namespace adofaiOBS.MainPatch {
 
     internal static class DetectWon {
         private static async void Prefix() {
-            if (scrController.isGameWorld) {
+            if (scrController.instance.gameworld) {
                 Main.Mod.Logger.Log("checking clear");
                 if (ADOBase.isScnGame && GCS.customLevelIndex < GCS.customLevelPaths.Length - 1 
                     && Main.Settings.KeepRecordingOnTutorialClear) return;
@@ -87,7 +87,7 @@ namespace adofaiOBS.MainPatch {
         }
     }
 
-    [HarmonyPatch(typeof(scnEditor), "Update")]
+    [HarmonyPatch(typeof(scnGame), "Update")]
 
     internal static class CheckRecording {
         private static void Postfix() {
